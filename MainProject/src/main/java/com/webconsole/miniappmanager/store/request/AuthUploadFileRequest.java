@@ -6,11 +6,6 @@
 //import vn.com.mbbank.miniappmanager.store.config.CoreFeignAuthUploadServiceConfiguration;
 //import vn.com.mbbank.miniappmanager.store.model.AccessTokenStore;
 //
-///**
-// * @author tientv2.os
-// * @desciption Upload file request authentication
-// * @date 24/3/2022
-// */
 //@FeignClient(name = "auth-store", url = "${store.auth-url}", configuration = CoreFeignAuthUploadServiceConfiguration.class)
 //public interface AuthUploadFileRequest {
 //

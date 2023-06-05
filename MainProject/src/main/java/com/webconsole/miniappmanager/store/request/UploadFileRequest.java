@@ -18,11 +18,6 @@
 //
 //import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 //
-///**
-// * @author tientv2.os
-// * @desciption request to Upload File Service
-// * @date 24/3/2022
-// */
 //@FeignClient(name = "store", url = "${store.base-url}", configuration = { CoreFeignConfiguration.class, MultipartSupportConfig.class})
 //public interface UploadFileRequest {
 //
