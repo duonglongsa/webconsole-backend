@@ -1,13 +1,11 @@
 package com.webconsole.miniappmanager.store.service.impl;
 
 import com.webconsole.miniappmanager.constants.AppStatus;
-import com.webconsole.miniappmanager.model.FileResponse;
 import com.webconsole.miniappmanager.model.MiniappDownload;
 import com.webconsole.miniappmanager.store.entity.Store;
-import com.webconsole.miniappmanager.store.service.IAuthUploadFileService;
+import com.webconsole.miniappmanager.store.service.FileService;
 import com.webconsole.miniappmanager.store.service.IDownloadService;
 import com.webconsole.miniappmanager.utils.Utils;
-import com.webconsole.miniappmanager.utils.constants.Constants;
 import com.webconsole.miniappmanager.utils.constants.Message;
 import com.webconsole.miniappmanager.utils.constants.Properties;
 import lombok.RequiredArgsConstructor;
@@ -30,26 +28,20 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DownloadServiceImpl implements IDownloadService {
-
-    private final IAuthUploadFileService authUploadFileService;
-
-    private final UploadFileRequest uploadFileRequest;
+    private final FileService fileService;
 
     private final MongoTemplate mongoTemplate;
 
@@ -65,29 +57,11 @@ public class DownloadServiceImpl implements IDownloadService {
     public void download(HttpServletResponse response, String storeId, String id, int mode) throws Exception {
         log.info("Start download miniapp " + id);
         MiniappDownload miniAppInfo = getMiniappInfoDraft(storeId, id);
-        if(miniAppInfo == null) {
+        if (miniAppInfo == null) {
             try {
-                Aggregation aggregation = Aggregation.newAggregation(
-                        match(where(Properties.ID).is(storeId)),
-                        unwind(Properties.MINI_APPS),
-                        unwind(Properties.APP_VERSIONS),
-                        context -> new Document("$addFields", new Document()
-                                .append("result", new Document()
-                                        .append("$eq", Arrays.asList(
-                                                        Properties.MINI_APPS_OBJ.VERSION_LIVE_$,
-                                                        Properties.MINI_APPS_OBJ.VERSION_$
-                                                )
-                                        )
-                                )
-                        ),
-                        match(where("result").is(true)),
-                        match(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(id)),
-                        project().andExpression(Properties.MINI_APPS_OBJ.FILE_ID_$).as(Properties.FILE_ID)
-                                .andExpression(Properties.MINI_APPS_OBJ.FULL_NAME_$).as(Properties.FULL_NAME)
-                );
-                AggregationResults<MiniappDownload> results = mongoTemplate.aggregate(aggregation, Properties.STORE,
-                        MiniappDownload.class);
-                if(results.getMappedResults().isEmpty()) {
+                Aggregation aggregation = Aggregation.newAggregation(match(where(Properties.ID).is(storeId)), unwind(Properties.MINI_APPS), unwind(Properties.APP_VERSIONS), context -> new Document("$addFields", new Document().append("result", new Document().append("$eq", Arrays.asList(Properties.MINI_APPS_OBJ.VERSION_LIVE_$, Properties.MINI_APPS_OBJ.VERSION_$)))), match(where("result").is(true)), match(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(id)), project().andExpression(Properties.MINI_APPS_OBJ.FILE_ID_$).as(Properties.FILE_ID).andExpression(Properties.MINI_APPS_OBJ.FULL_NAME_$).as(Properties.FULL_NAME));
+                AggregationResults<MiniappDownload> results = mongoTemplate.aggregate(aggregation, Properties.STORE, MiniappDownload.class);
+                if (results.getMappedResults().isEmpty()) {
                     log.error(Message.Error.NOT_FOUND.replace("{}", "Miniapp"));
                     throw new Exception("Mini app not found");
                 }
@@ -99,8 +73,7 @@ public class DownloadServiceImpl implements IDownloadService {
             }
         }
         String saveFileFolderPath = filePath.replace("{}", id);
-        String jwt = Constants.BEARER + authUploadFileService.getToken();
-        byte[] fileByte = uploadFileRequest.download(serviceName, miniAppInfo.getFileId(), jwt);
+        byte[] fileByte = fileService.download(serviceName, miniAppInfo.getFileId());
         File file = new File(saveFileFolderPath + miniAppInfo.getFullName());
         Utils.setFileData(file, saveFileFolderPath, fileByte);
 
@@ -109,18 +82,14 @@ public class DownloadServiceImpl implements IDownloadService {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
         response.setContentLength((int) file.length());
 
-        try (
-                BufferedInputStream is = new BufferedInputStream(new FileInputStream(file));
-                BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream());
-        ) {
+        try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(file)); BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream())) {
             byte[] buffer = new byte[1024];
-            int bytesRead = 0;
+            int bytesRead;
             while ((bytesRead = is.read(buffer)) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
-            // count
-            if(mode == 1) {
-                sumNumberofDownload(storeId, id);
+            if (mode == 1) {
+                sumNumberOfDownload(storeId, id);
             }
             os.flush();
         } catch (Exception e) {
@@ -129,16 +98,15 @@ public class DownloadServiceImpl implements IDownloadService {
             throw new Exception("Download failed");
         } finally {
             Path path = Paths.get(saveFileFolderPath);
-            if(Files.exists(path)) {
+            if (Files.exists(path)) {
                 FileUtils.deleteDirectory(new File(saveFileFolderPath));
             }
         }
     }
 
-    private void sumNumberofDownload(String storeId, String id) {
+    private void sumNumberOfDownload(String storeId, String id) {
         Query query = new Query();
-        query.addCriteria(where(Properties.ID).is(storeId))
-                .addCriteria(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(id));
+        query.addCriteria(where(Properties.ID).is(storeId)).addCriteria(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(id));
         Update update = new Update();
         update.inc(Properties.MINI_APPS_OBJ.NUMBER_OF_DOWNLOAD_$, 1);
         this.mongoTemplate.updateFirst(query, update, Store.class);
@@ -146,30 +114,23 @@ public class DownloadServiceImpl implements IDownloadService {
 
     @Override
     public void downloadFileById(HttpServletResponse response, String fileId) throws Exception {
-        String jwt = Constants.BEARER + authUploadFileService.getToken();
-        HttpResponse<HttpResponse<FileResponse>> fileInfo = uploadFileRequest.getById(Utils.genUniqueId(),
-                Utils.genUniqueId(), fileId, jwt);
-        if(!fileInfo.getData().getResult().isOk()) {
-            log.error(fileInfo.getData().getResult().getMessage());
+        var fileInfo = fileService.getById(Utils.genUniqueId(), fileId);
+        if (fileInfo == null) {
+            log.error("File not found id: {}", fileId);
             throw new Exception("Download file failed");
         }
-
         String saveFileFolderPath = filePath.replace("{}", fileId);
-        byte[] fileByte = uploadFileRequest.download(serviceName, fileId, jwt);
-        File file = new File(saveFileFolderPath + fileInfo.getData().getData().getFileName());
+        byte[] fileByte = fileService.download(serviceName, fileId);
+        File file = new File(saveFileFolderPath + fileInfo.getFileName());
         Utils.setFileData(file, saveFileFolderPath, fileByte);
 
         MediaType mediaType = getMediaType(file.getName());
         response.setContentType(mediaType.getType());
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
         response.setContentLength((int) file.length());
-
-        try (
-                BufferedInputStream is = new BufferedInputStream(new FileInputStream(file));
-                BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream())
-        ){
+        try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(file)); BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream())) {
             byte[] buffer = new byte[1024];
-            int bytesRead = 0;
+            int bytesRead;
             while ((bytesRead = is.read(buffer)) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
@@ -180,14 +141,14 @@ public class DownloadServiceImpl implements IDownloadService {
             throw new Exception("Download file failed");
         } finally {
             Path path = Paths.get(saveFileFolderPath);
-            if(Files.exists(path)) {
+            if (Files.exists(path)) {
                 FileUtils.deleteDirectory(new File(saveFileFolderPath));
             }
         }
     }
 
     private MediaType getMediaType(String fileName) {
-        MediaType mediaType = null;
+        MediaType mediaType;
         String mineType = servletContext.getMimeType(fileName);
         try {
             mediaType = MediaType.parseMediaType(mineType);
@@ -199,19 +160,9 @@ public class DownloadServiceImpl implements IDownloadService {
 
     private MiniappDownload getMiniappInfoDraft(String storeId, String appId) throws Exception {
         try {
-            Aggregation aggregation = Aggregation.newAggregation(
-                    match(where(Properties.ID).is(storeId)),
-                    unwind(Properties.MINI_APPS),
-                    unwind(Properties.APP_VERSIONS),
-                    match(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(appId)),
-                    match(where(Properties.MINI_APPS_OBJ.STATUS)
-                            .in(List.of(AppStatus.DRAFT, AppStatus.IN_REVIEW, AppStatus.REJECT))),
-                    project().andExpression(Properties.MINI_APPS_OBJ.FILE_ID_$).as(Properties.FILE_ID)
-                            .andExpression(Properties.MINI_APPS_OBJ.FULL_NAME_$).as(Properties.FULL_NAME)
-            );
-            AggregationResults<MiniappDownload> results = mongoTemplate.aggregate(aggregation, Properties.STORE,
-                    MiniappDownload.class);
-            if(results.getMappedResults().isEmpty()) {
+            Aggregation aggregation = Aggregation.newAggregation(match(where(Properties.ID).is(storeId)), unwind(Properties.MINI_APPS), unwind(Properties.APP_VERSIONS), match(where(Properties.MINI_APPS_OBJ.APP_ID_PROP).is(appId)), match(where(Properties.MINI_APPS_OBJ.STATUS).in(List.of(AppStatus.DRAFT, AppStatus.IN_REVIEW, AppStatus.REJECT))), project().andExpression(Properties.MINI_APPS_OBJ.FILE_ID_$).as(Properties.FILE_ID).andExpression(Properties.MINI_APPS_OBJ.FULL_NAME_$).as(Properties.FULL_NAME));
+            AggregationResults<MiniappDownload> results = mongoTemplate.aggregate(aggregation, Properties.STORE, MiniappDownload.class);
+            if (results.getMappedResults().isEmpty()) {
                 return null;
             }
             return results.getMappedResults().get(0);
