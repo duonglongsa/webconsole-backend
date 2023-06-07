@@ -54,7 +54,7 @@ public class DownloadServiceImpl implements DownloadService {
     private String filePath;
 
     @Override
-    public void download(HttpServletResponse response, String storeId, String id, int mode) throws Exception {
+    public void download(String storeId, String id, int mode, HttpServletResponse response) throws Exception {
         log.info("Start download miniapp " + id);
         MiniappDownload miniAppInfo = getMiniappInfoDraft(storeId, id);
         if (miniAppInfo == null) {
@@ -113,7 +113,7 @@ public class DownloadServiceImpl implements DownloadService {
     }
 
     @Override
-    public void downloadFileById(HttpServletResponse response, String fileId) throws Exception {
+    public void downloadFileById(String fileId, HttpServletResponse response) throws Exception {
         var fileInfo = fileService.getById(Utils.genUniqueId(), fileId);
         if (fileInfo == null) {
             log.error("File not found id: {}", fileId);

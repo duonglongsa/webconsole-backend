@@ -24,6 +24,7 @@
         <dependency>
             <artifactId>keycloak-spring-boot-starter</artifactId>
             <groupId>org.keycloak</groupId>
+            <version>17.0.1</version>
         </dependency>
         <dependency>
             <artifactId>keycloak-admin-client</artifactId>

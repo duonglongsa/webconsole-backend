@@ -9,23 +9,25 @@ import com.webconsole.miniappmanager.store.service.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/upload")
 public class UploadController {
 
     private final UploadService uploadService;
 
-    @PostMapping("upload/{userId}/draft")
+    @PostMapping("/{userId}/draft")
     private Response<Void> saveDraft(@PathVariable String userId, AttachmentFileDraft attachmentFile, @Valid MultiPartFilesDraft files) {
         uploadService.saveDraft(userId, attachmentFile, files);
         return Response.ofSucceeded();
     }
 
-    @PostMapping("upload/{userId}/public")
+    @PostMapping("/{userId}/public")
     private Response<Void> uploadPublic(@PathVariable String userId, @Valid AttachmentFile attachmentFile, @Valid MultiPartFiles files) {
         uploadService.upload(userId, attachmentFile, files);
         return Response.ofSucceeded();
