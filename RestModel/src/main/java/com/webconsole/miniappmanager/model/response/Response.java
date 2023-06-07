@@ -60,8 +60,8 @@ public class Response<T> {
 
     public static Response<Void> ofFailed(BusinessErrorCode errorCode, String message, List<FieldViolation> errors) {
         Response<Void> response = new Response<>();
-        response.meta.code = Constant.PREFIX_RESPONSE_CODE + errorCode.getCode();
-        response.meta.message = message != null ? message : errorCode.getMessage();
+        response.meta.code = Constant.PREFIX_RESPONSE_CODE + errorCode.code();
+        response.meta.message = message != null ? message : errorCode.message();
         response.meta.errors = errors;
         return response;
     }

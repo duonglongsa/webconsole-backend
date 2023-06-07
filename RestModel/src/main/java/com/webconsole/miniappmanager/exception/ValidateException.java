@@ -6,6 +6,7 @@ import java.util.List;
 
 @Getter
 public class ValidateException extends RuntimeException {
+
     private final List<FieldViolation> fieldViolations;
 
     public ValidateException(List<FieldViolation> fieldViolations) {
