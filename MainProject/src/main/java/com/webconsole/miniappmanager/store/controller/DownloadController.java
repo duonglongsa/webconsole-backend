@@ -1,6 +1,6 @@
 package com.webconsole.miniappmanager.store.controller;
 
-import com.webconsole.miniappmanager.store.service.IDownloadService;
+import com.webconsole.miniappmanager.store.service.DownloadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class DownloadController {
 
-    private final IDownloadService downloadService;
+    private final DownloadService downloadService;
 
     @GetMapping("download/{storeId}/app/{id}")
     private void download(@PathVariable String storeId, @PathVariable String id, HttpServletResponse

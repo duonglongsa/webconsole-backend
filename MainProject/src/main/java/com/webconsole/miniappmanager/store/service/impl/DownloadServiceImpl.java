@@ -4,7 +4,7 @@ import com.webconsole.miniappmanager.constant.AppStatus;
 import com.webconsole.miniappmanager.model.MiniappDownload;
 import com.webconsole.miniappmanager.store.entity.Store;
 import com.webconsole.miniappmanager.store.service.FileService;
-import com.webconsole.miniappmanager.store.service.IDownloadService;
+import com.webconsole.miniappmanager.store.service.DownloadService;
 import com.webconsole.miniappmanager.utils.Utils;
 import com.webconsole.miniappmanager.utils.constants.Message;
 import com.webconsole.miniappmanager.utils.constants.Properties;
@@ -40,7 +40,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class DownloadServiceImpl implements IDownloadService {
+public class DownloadServiceImpl implements DownloadService {
     private final FileService fileService;
 
     private final MongoTemplate mongoTemplate;
