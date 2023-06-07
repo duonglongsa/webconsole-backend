@@ -1,6 +1,6 @@
 package com.webconsole.miniappmanager.store.service.impl;
 
-import com.webconsole.miniappmanager.constants.AppStatus;
+import com.webconsole.miniappmanager.constant.AppStatus;
 import com.webconsole.miniappmanager.model.MiniappDownload;
 import com.webconsole.miniappmanager.store.entity.Store;
 import com.webconsole.miniappmanager.store.service.FileService;

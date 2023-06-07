@@ -1,4 +1,4 @@
-package com.webconsole.miniappmanager.constants;
+package com.webconsole.miniappmanager.constant;
 
 public class ResponseCodeMW {
     public static final String SUCCESS              = "MW000";

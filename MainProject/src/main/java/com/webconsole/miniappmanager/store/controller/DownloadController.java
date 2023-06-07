@@ -16,20 +16,13 @@ public class DownloadController {
     private final IDownloadService downloadService;
 
     @GetMapping("download/{storeId}/app/{id}")
-    private void download(
-            @PathVariable String storeId,
-            @PathVariable String id,
-            HttpServletResponse response,
-            @RequestParam(defaultValue = "0") int mode
-    ) throws Exception {
+    private void download(@PathVariable String storeId, @PathVariable String id, HttpServletResponse
+            response, @RequestParam(defaultValue = "0") int mode) throws Exception {
         downloadService.download(response, storeId, id, mode);
     }
 
     @GetMapping("files/{id}")
-    private void getFile(
-            @PathVariable String id,
-            HttpServletResponse response
-    ) throws Exception {
+    private void getFile(@PathVariable String id, HttpServletResponse response) throws Exception {
         downloadService.downloadFileById(response, id);
     }
 }
