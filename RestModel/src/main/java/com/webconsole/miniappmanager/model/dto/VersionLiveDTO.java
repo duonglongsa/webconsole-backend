@@ -3,11 +3,6 @@ package com.webconsole.miniappmanager.model.dto;
 import lombok.Data;
 import org.json.JSONObject;
 
-/**
- * @author tientv2.os
- * @desciption VersionLiveDTO model
- * @date 6/5/2022
- */
 @Data
 public class VersionLiveDTO {
     private String appId;

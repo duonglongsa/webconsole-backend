@@ -7,14 +7,14 @@ import com.webconsole.miniappmanager.model.dto.MiniAppInfoResultDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface StoreService {
-    List<MiniAppInfoResultDTO> getStore();
+public interface MiniAppInfoService {
+    List<MiniAppInfoResultDTO> getMiniApps();
 
     List<MiniAppInfoResultDTO> findByUserId(String userId);
 
     MiniAppInfoDTO getMiniAppInfo(String storeId, String id);
 
-    List<String> getAppVersions(String storeId, String id);
+    List<String> getMiniAppVersions(String storeId, String id);
 
     List<MiniAppInfoDTO> getMiniAppByName(String name);
 

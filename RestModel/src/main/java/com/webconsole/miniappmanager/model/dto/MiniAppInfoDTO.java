@@ -5,11 +5,6 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * @author tientv2.os
- * @desciption Mini app info model dto
- * @date 30/3/2022
- */
 @Data
 public class MiniAppInfoDTO {
     @JsonProperty("id")

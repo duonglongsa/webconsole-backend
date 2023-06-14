@@ -3,11 +3,6 @@ package com.webconsole.miniappmanager.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-/**
- * @author tientv2.os
- * @desciption UserInfo model
- * @date 30/3/2022
- */
 @Data
 public class UserInfoDTO {
     @JsonProperty("id")

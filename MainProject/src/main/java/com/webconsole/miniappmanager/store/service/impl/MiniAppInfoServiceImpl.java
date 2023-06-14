@@ -3,7 +3,8 @@ package com.webconsole.miniappmanager.store.service.impl;
 import com.webconsole.miniappmanager.model.*;
 import com.webconsole.miniappmanager.model.dto.MiniAppInfoDTO;
 import com.webconsole.miniappmanager.model.dto.MiniAppInfoResultDTO;
-import com.webconsole.miniappmanager.store.service.StoreService;
+import com.webconsole.miniappmanager.store.repository.MiniAppInfoRepository;
+import com.webconsole.miniappmanager.store.service.MiniAppInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StoreServiceImpl implements StoreService {
+public class MiniAppInfoServiceImpl implements MiniAppInfoService {
+    private final MiniAppInfoRepository miniAppInfoRepository;
+
     @Override
-    public List<MiniAppInfoResultDTO> getStore() {
+    public List<MiniAppInfoResultDTO> getMiniApps() {
         return null;
     }
 
@@ -31,7 +34,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<String> getAppVersions(String storeId, String id) {
+    public List<String> getMiniAppVersions(String storeId, String id) {
         return null;
     }
 

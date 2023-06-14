@@ -6,11 +6,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-/**
- * @author tientv2.os
- * @desciption MiniApp Info Result DTO
- * @date 1/4/2022
- */
 @Data
 public class MiniAppInfoResultDTO {
     @JsonProperty("id")
