@@ -1,12 +1,14 @@
 package com.webconsole.miniappmanager.store.entity;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
+@Accessors(chain = true)
+@Document("app-version")
 public class AppVersion {
     private String fullName;
     private String description;
@@ -27,5 +29,4 @@ public class AppVersion {
     private String updateTime;
     private String createTime;
     private String reasonReject;
-
 }

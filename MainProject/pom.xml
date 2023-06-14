@@ -11,26 +11,31 @@
 
     <artifactId>MainProject</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-adapter-core</artifactId>
-            <version>17.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-security-adapter</artifactId>
-            <version>17.0.1</version>
-        </dependency>
-        <dependency>
-            <artifactId>keycloak-spring-boot-starter</artifactId>
-            <groupId>org.keycloak</groupId>
-            <version>17.0.1</version>
-        </dependency>
-        <dependency>
-            <artifactId>keycloak-admin-client</artifactId>
-            <groupId>org.keycloak</groupId>
-            <version>17.0.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-boot-adapter-core</artifactId>-->
+<!--            <version>17.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-spring-security-adapter</artifactId>-->
+<!--            <version>17.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <artifactId>keycloak-spring-boot-starter</artifactId>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <version>17.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <artifactId>keycloak-admin-client</artifactId>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <version>17.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.keycloak</groupId>-->
+<!--            <artifactId>keycloak-authz-client</artifactId>-->
+<!--            <version>17.0.1</version>-->
+<!--        </dependency>-->
         <dependency>
             <artifactId>spring-boot-starter-security</artifactId>
             <groupId>org.springframework.boot</groupId>
@@ -61,15 +66,15 @@
             <version>5.7.1</version>
         </dependency>
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-authz-client</artifactId>
-            <version>17.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.webconsole</groupId>
             <artifactId>RestModel</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
 

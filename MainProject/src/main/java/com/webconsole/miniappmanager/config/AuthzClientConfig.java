@@ -1,9 +1,9 @@
 package com.webconsole.miniappmanager.config;
 
-import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
-import org.keycloak.authorization.client.AuthzClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+//import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
+//import org.keycloak.authorization.client.AuthzClient;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 //public class AuthzClientConfig {

@@ -4,12 +4,16 @@ import com.webconsole.miniappmanager.model.*;
 import com.webconsole.miniappmanager.model.dto.MiniAppInfoDTO;
 import com.webconsole.miniappmanager.model.dto.MiniAppInfoResultDTO;
 import com.webconsole.miniappmanager.store.service.StoreService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
     @Override
     public List<MiniAppInfoResultDTO> getStore() {

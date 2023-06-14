@@ -1,15 +1,17 @@
 package com.webconsole.miniappmanager.store.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
+@Accessors(chain = true)
+@Document("mini-app-info")
 public class MiniAppInfo {
-    @JsonProperty("id")
+    @Id
     private String appId;
     private String packageId;
     private int numberOfDownloads;
